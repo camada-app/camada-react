@@ -39,8 +39,17 @@ export default function Layout({ children }) {
 ```
 
 Renders `<script src="/_cam/b.js?r=<rid>" async />`. The script itself is the
-`@camada/browser` self-initializing beacon, served at `/_cam/b.js` by the
-backend SDK on the same origin.
+`@camada/browser` self-initializing beacon, served first-party by the backend SDK
+on the same origin: `@camada/node` and `@camada/hono` serve it at `/_cam/b.js`,
+the default here. `@camada/next` wraps this component in its own async
+`<CamadaBeacon />` (from `@camada/next`) with the default `src` `/api/camada/b.js`
+and the rid read from the middleware's `x-camada-rid` header — use that one in a
+Next app rather than this component directly.
+
+The component reports no version of its own; the beacon it loads stamps
+`sdk: "@camada/browser/<version>"` on its payload, which is what the dashboard
+uses to flag an outdated beacon. 0.2.0 aligns this package with the SDK family;
+the API is unchanged.
 
 ### Props
 
