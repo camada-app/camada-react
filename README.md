@@ -8,18 +8,11 @@ No hooks, no client-only APIs — it works as a React Server Component, in SSR
 
 ## Install
 
-Unpublished. Consume it from a sibling checkout via a `file:` dependency:
-
-```json
-{
-  "dependencies": {
-    "@camada/react": "file:../camada-react"
-  }
-}
+```sh
+npm install @camada/react
 ```
 
-Run `npm run build` in this repo first so `dist/` exists. Requires `react >= 18`
-as a peer dependency.
+Requires `react >= 18` as a peer dependency.
 
 ## Quickstart
 
