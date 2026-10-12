@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { renderToString } from 'react-dom/server';
 import { CamadaBeacon } from '../src/index';

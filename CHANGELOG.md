@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- `<CamadaBeacon/>` now loads the beacon when rendered on the client under React 18 (React created the script through `innerHTML`, so it never ran). An effect inserts it once, skipped for an SSR'd tag already on the page, under React 19 and on a second mount. SSR and RSC output is unchanged; the package carries `'use client'`. (camada-all-mnhf)
+
+### Changed
+
+- The `exports` map now gives `require` its own `.d.cts` declarations (`import` and `require` each carry a `types` condition), so a CommonJS TypeScript app on `moduleResolution: node16` compiles; CI runs `@arethetypeswrong/cli`. (camada-all-vuzm)
+
 ## 0.3.1 (2026-10-09; follows 0.3.0)
 
 - Version-only release, in lockstep with `@camada/node` 0.3.1. Nothing changed for the React bindings.
