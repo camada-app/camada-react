@@ -3,8 +3,14 @@
 React component for the camada beacon: `<CamadaBeacon />` renders the
 first-party beacon `<script>` tag served by a camada backend SDK.
 
-No hooks, no client-only APIs — it works as a React Server Component, in SSR
-(`renderToString`), and in plain client React.
+Server output (SSR with `renderToString`, or a React Server Component) is the bare
+`<script src async>` tag, which the browser runs as it parses the page. On the client the
+component also loads the script itself, once: React 18 never runs a `<script>` it creates
+on the client (React 19 does), so under React 18 an effect inserts the script with
+`document.createElement`. It skips that when the tag was already on the page when the
+component first rendered (an SSR'd tag being hydrated, or an earlier mount), and under
+React 19. The package ships with the `'use client'` directive so a Server Component can
+import it.
 
 ## Install
 
@@ -57,6 +63,6 @@ The props type is exported as `CamadaBeaconProps`.
 ```bash
 npm install
 npm run build   # tsup (ESM + CJS + d.ts)
-npm test        # vitest (renderToString)
+npm test        # vitest: SSR output, and client render under React 19 and React 18 (jsdom runs the scripts)
 npm run check   # tsc --noEmit
 ```

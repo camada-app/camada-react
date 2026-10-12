@@ -1,6 +1,12 @@
+'use client';
 // @camada/react — renders the first-party camada beacon script tag.
-// No hooks, no client-only APIs: works as a React Server Component, in SSR
-// (renderToString), and in plain client React alike.
+// The tag is a plain <script src async>: SSR (renderToString) and RSC output is exactly that, and
+// the browser's parser runs it. A script React creates on the CLIENT through innerHTML never runs
+// under React 18 (React 19 hoists and loads it), so on the client the component also inserts the
+// script imperatively, once, unless the tag was already on the page when it first rendered
+// (SSR'd and hydrated, or a second mount). The 'use client' directive keeps that effect legal when
+// a Server Component imports this: the server output is the same tag.
+import { useEffect, useRef, useState, version } from 'react';
 
 export interface CamadaBeaconProps {
   /** Path the backend SDK serves the beacon from. Default: '/_cam/b.js'. */
@@ -9,6 +15,23 @@ export interface CamadaBeaconProps {
   rid?: string | null;
 }
 
+const hasScript = (url: string, except?: Element | null): boolean =>
+  Array.from(document.scripts).some((s) => s !== except && s.getAttribute('src') === url);
+
 export function CamadaBeacon({ src = '/_cam/b.js', rid }: CamadaBeaconProps) {
-  return <script src={rid ? `${src}?r=${rid}` : src} async />;
+  const url = rid ? `${src}?r=${rid}` : src;
+  const own = useRef<HTMLScriptElement>(null);
+  // Render phase, before this component's own tag is committed: a tag already in the document is
+  // an SSR'd one the browser ran (hydration) or one an earlier mount loaded.
+  const [initial] = useState(() => ({ url, onPage: typeof document !== 'undefined' && hasScript(url) }));
+  useEffect(() => {
+    if (initial.onPage && url === initial.url) return;          // the first url was already run by the browser; every other url gets one run
+    if (Number.parseInt(version, 10) >= 19) return;             // React 19 loads the rendered tag itself
+    if (hasScript(url, own.current)) return;                    // StrictMode's second effect run, or a sibling mount
+    const s = document.createElement('script');
+    s.src = url;
+    s.async = true;
+    document.head.appendChild(s);
+  }, [url, initial]);
+  return <script ref={own} src={url} async />;
 }
