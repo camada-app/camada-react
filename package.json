@@ -13,16 +13,22 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "test": "vitest run",
-    "check": "tsc --noEmit"
+    "test": "vitest run && vitest run -c vitest.react18.config.ts",
+    "check": "tsc --noEmit",
+    "pretest": "npm install --prefix test/react18 --no-audit --no-fund --silent"
   },
   "name": "@camada/react",
   "description": "camada beacon React component: <CamadaBeacon/> renders the first-party beacon script tag",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     }
   },
   "main": "./dist/index.cjs",
@@ -38,6 +44,7 @@
     "react-dom": "^19.0.0",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2",
-    "vitest": "^3.0.0"
+    "vitest": "^3.0.0",
+    "jsdom": "^25.0.1"
   }
 }
