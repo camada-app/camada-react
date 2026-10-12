@@ -23,14 +23,15 @@ export function CamadaBeacon({ src = '/_cam/b.js', rid }: CamadaBeaconProps) {
   const own = useRef<HTMLScriptElement>(null);
   // Render phase, before this component's own tag is committed: a tag already in the document is
   // an SSR'd one the browser ran (hydration) or one an earlier mount loaded.
-  const [onPage] = useState(() => typeof document !== 'undefined' && hasScript(url));
+  const [initial] = useState(() => ({ url, onPage: typeof document !== 'undefined' && hasScript(url) }));
   useEffect(() => {
-    if (onPage || Number.parseInt(version, 10) >= 19) return;   // React 19 loads the rendered tag itself
+    if (initial.onPage && url === initial.url) return;          // the first url was already run by the browser; every other url gets one run
+    if (Number.parseInt(version, 10) >= 19) return;             // React 19 loads the rendered tag itself
     if (hasScript(url, own.current)) return;                    // StrictMode's second effect run, or a sibling mount
     const s = document.createElement('script');
     s.src = url;
     s.async = true;
     document.head.appendChild(s);
-  }, [url, onPage]);
+  }, [url, initial]);
   return <script ref={own} src={url} async />;
 }
