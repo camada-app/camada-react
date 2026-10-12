@@ -68,6 +68,21 @@ describe(`client render, React ${version}`, () => {
     await act(async () => { root.unmount(); });
   });
 
+  it('runs the beacon for a new rid after hydrating an SSR tag (one run per distinct url)', async () => {
+    const el = fresh();
+    el.innerHTML = renderToString(<CamadaBeacon src={SRC} rid="h1" />);
+    win().__beaconRuns = 1;       // the browser ran the SSR'd tag
+    let root!: ReturnType<typeof hydrateRoot>;
+    await act(async () => { root = hydrateRoot(el, <CamadaBeacon src={SRC} rid="h1" />); });
+    await settle(300);
+    expect(runs()).toBe(1);
+    await act(async () => { root.render(<CamadaBeacon src={SRC} rid="h2" />); });
+    for (let i = 0; i < 40 && runs() < 2; i++) await settle(25);
+    await settle(150);
+    expect(runs()).toBe(2);
+    await act(async () => { root.unmount(); });
+  });
+
   it('a second mount on a page whose beacon is already there does not load it again', async () => {
     const a = createRoot(fresh());
     await act(async () => { a.render(<CamadaBeacon src={SRC} />); });
