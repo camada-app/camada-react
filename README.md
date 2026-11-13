@@ -1,5 +1,7 @@
 # @camada/react
 
+[Bot detection](https://www.camada.app/bot-detection) · [Next.js guide](https://www.camada.app/docs/quickstart/nextjs) · [Bot signal test](https://www.camada.app/tools/bot-test) · [Pricing](https://www.camada.app/pricing).
+
 React component for the camada beacon: `<CamadaBeacon />` renders the
 first-party beacon `<script>` tag served by a camada backend SDK.
 
@@ -42,7 +44,7 @@ Renders `<script src="/_cam/b.js?r=<rid>" async />`. The script itself is the
 `@camada/node` and `@camada/hono` serve it at `/_cam/b.js`, the default here.
 `@camada/next` wraps this component in its own async `<CamadaBeacon />` with the
 default `src` `/api/camada/b.js` and the rid read from the middleware's
-`x-camada-rid` header — use that one in a Next app rather than this component
+`x-camada-rid` header. Use that one in a Next app rather than this component
 directly.
 
 The component reports no version of its own; the beacon it loads stamps
@@ -54,7 +56,7 @@ uses to flag an outdated beacon.
 | Prop  | Type             | Default        | Meaning                                                    |
 | ----- | ---------------- | -------------- | ---------------------------------------------------------- |
 | `src` | `string`         | `'/_cam/b.js'` | Path the backend SDK serves the beacon from.               |
-| `rid` | `string \| null` | —              | Request id for this page view; appended as `?r=<rid>`.     |
+| `rid` | `string \| null` | none           | Request id for this page view; appended as `?r=<rid>`.     |
 
 The props type is exported as `CamadaBeaconProps`.
 
@@ -66,3 +68,13 @@ npm run build   # tsup (ESM + CJS + d.ts)
 npm test        # vitest: SSR output, and client render under React 19 and React 18 (jsdom runs the scripts)
 npm run check   # tsc --noEmit
 ```
+
+## Docs and links
+
+Read the guides on [camada.app](https://www.camada.app/docs).
+
+- [Bot detection](https://www.camada.app/bot-detection): see how `<CamadaBeacon />` links browser signals to server requests.
+- [Next.js guide](https://www.camada.app/docs/quickstart/nextjs): use `@camada/next` in App Router layouts.
+- [Frameworks](https://www.camada.app/frameworks): pair `<CamadaBeacon />` with Node, Hono, or Remix servers.
+- [Bot signal test](https://www.camada.app/tools/bot-test): check live browser and TLS signals from your client.
+- [Pricing](https://www.camada.app/pricing): compare the free tier and paid plans.

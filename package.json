@@ -19,6 +19,28 @@
   },
   "name": "@camada/react",
   "description": "camada beacon React component: <CamadaBeacon/> renders the first-party beacon script tag",
+  "homepage": "https://www.camada.app/bot-detection",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/camada-app/camada-react.git"
+  },
+  "bugs": {
+    "url": "https://github.com/camada-app/camada-react/issues"
+  },
+  "keywords": [
+    "camada",
+    "react",
+    "bot-detection",
+    "bot-protection",
+    "credential-stuffing",
+    "account-takeover",
+    "rate-limiting",
+    "proof-of-work",
+    "ai-scraper",
+    "server-components",
+    "ssr",
+    "security"
+  ],
   "exports": {
     ".": {
       "import": {
